@@ -5,12 +5,12 @@
 #include "StreamCipherProvider.h"
 #include "BlockCipherProvider.h"
 #include "iostream"
-char cipher1[50],cipher2[50],cipher3[50];
-char replaintext1[50],replaintext2[50],replaintext3[50];
+//char cipher1[50],cipher2[50],cipher3[50];
+//char replaintext1[50],replaintext2[50],replaintext3[50];
 int main(int argc, _TCHAR* argv[])
 {
 
-	
+/*	
 	
 	//ma hoa
 
@@ -79,42 +79,58 @@ int main(int argc, _TCHAR* argv[])
 		std::cout << (int)replaintext3[i] << "\t";
 	}
 	std::cout<< replaintext3 <<"\n";
+*/
+	
+////////////////DEMO BLOCK CIPHER////////////////////
+	char *demo = "this is a demo for block cipher , i will be repaired until to be right";
+	char *key = "this is a demo for block cipher ,OK i will be repaired until to be right. Contact us :http://www.efgh.com/software/rijndael.htmfda "; 
+	
+	int iTemp=strlen(key);
+	std::cout << "Plaintext : \n\t";
+	for (int i=0;i<strlen(demo);i++)
+	{
+		std::cout << (int)demo[i] << "\t";
+	}
+	// khoi tao trinh ma hoa
+	CBlockCipherProvider bcpTemp,bcpTemp2;
+	bcpTemp.Init(key);
+	bcpTemp2.Init(key);
+
+	// ma hoa va hien thi ket qua
+	std::cout << "\nCiphertext : \n\t";
+	int size = strlen(demo)+1;
+	char cipher[100],replaintext[100],cipher2[100],replaintext2[100];
+	bcpTemp.CTRModeEncrypt(demo,size,cipher);
+	for (i=0;i<size;i++)
+	{
+		std::cout << (int)cipher[i] << "\t";
+	}
+	std::cout << "\nCiphertext 2 : \n\t";
+	bcpTemp.CTRModeEncrypt(demo,size,cipher2);
+	for (i=0;i<size;i++)
+	{
+		std::cout << (int)cipher2[i] << "\t";
+	}
+	// giai ma
+//	CBlockCipherProvider bcpTemp2;
+	bcpTemp2.Init(key);
+	bcpTemp2.CTRModeDecrypt(cipher,size,replaintext );
+	std::cout << "\nReplaintext : \n\t";
+	for (i=0;i<size;i++)
+	{
+		std::cout << (int)replaintext[i] << "\t";
+	}
+
+	bcpTemp2.CTRModeDecrypt(cipher2,size,replaintext2 );
+	std::cout << "\nReplaintext 2: \n\t";
+	for (i=0;i<size;i++)
+	{
+		std::cout << (int)replaintext2[i] << "\t";
+	}
+	char a;
+	std::cin>>a;
 
 	
-	//char *demo = "this is a demo for block cipher , i will be repaired until to be right";
-	//char *key = "this is a demo for block cipher ,OK i will be repaired until to be right. Contact us :http://www.efgh.com/software/rijndael.htm "; 
-	//std::cout << "Plaintext : \n\t";
-	//for (int i=0;i<strlen(demo);i++)
-	//{
-	//	std::cout << (int)demo[i] << "\t";
-	//}
-	//// khoi tao trinh ma hoa
-	//CBlockCipherProvider bcpTemp;
-	//bcpTemp.Init(key);
-	//// ma hoa va hien thi ket qua
-	//std::cout << "\nCiphertext : \n\t";
-	//int size;
-
-	//char* cipher = bcpTemp.CTRModeEncrypt(demo,size);
-	//for (int i=0;i<strlen(demo);i++)
-	//{
-	//	std::cout << (int)cipher[i] << "\t";
-	//}
-	//// giai ma
-	//char* replaintext = bcpTemp.CTRModeDecrypt(cipher,size);
-	//std::cout << "\nReplaintext : \n\t";
-	//for (int i=0;i<size;i++)
-	//{
-	//	std::cout << (int)replaintext[i] << "\t";
-	//}
-	//char a;
-	//std::cin>>a;
-
-	//delete cipher;
-	//delete cipher2;
-	//delete cipher3;
-	//delete replaintext;
-	//delete replaintext2;
 	return 0;
 }
 

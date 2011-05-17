@@ -30,7 +30,7 @@ public:
 	CString curuser,writeuser;
 	char *playmesg;
 	//CListBox *from;
-	CButton *radio1,*radio2,*start,*stop;
+	CButton *radio1,*radio2,*radio3,*radio4,*start,*stop;
 	CAnimateCtrl *anicon,*talk;
 	
 	LPWAVEHDR playhead[MAXBUFFER];
