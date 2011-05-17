@@ -74,18 +74,16 @@ int test(u8 *S0)
 		{
 			for (k=0;k<255;k++)
 			{
-				if (a+k<256)
-				{
-					iTemp=(a+k)%256;
-					char x1 =(char)S0[iTemp];
+				u8 cTemp = a ^ k;
+					//iTemp=(a+k)%256;
+					char x1 =(char)S0[cTemp];
 					char x2 = (char)S0[k];
 					char x3 = (char)b;
 					//if ((S0[iTemp]-S0[k])%256==b)
 					if ((x1^x2)==x3)
 					{	
-							count++;	
+						count++;	
 					}
-				}
 				
 			}
 			if (count > max)
