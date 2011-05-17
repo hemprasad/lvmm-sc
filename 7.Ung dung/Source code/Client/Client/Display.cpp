@@ -21,6 +21,7 @@ char mymesg[2020] ;
 #include "WriteSound.h"
 #include "Broadcast.h"
 #include "StreamCipherProvider.h"
+#include "BlockCipherProvider.h"
 //////////////////////////
 //	MESSAGE MAPPING     //
 //////////////////////////
@@ -40,9 +41,10 @@ ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
 
-bool isKey;
+bool isKey,isStream;
 
 CStreamCipherProvider scpTemp1,scpTemp2;
+CBlockCipherProvider bcpTemp1,bcpTemp2;
 //
 //Constructor
 //
@@ -198,6 +200,9 @@ CFont myfont;
 	start=stop=NULL;
 
 
+	radio3=(CButton*)GetDlgItem(IDC_RADIO_BLOCK);
+	radio3->SetCheck(true);
+	radio4=(CButton*)GetDlgItem(IDC_RADIO_STREAM);
 return CDialog::OnInitDialog();
 }
 
@@ -297,7 +302,13 @@ CString sername,username,mesg;
 	{
 		anicon->Play(0,-1,-1);
 		log.WriteString("\n Playing data");
-		///fix doan nay lai
+		
+	}
+	
+	//Connect the client to server
+	username.MakeUpper();
+	sockclt.name=username;
+	///fix doan nay lai
 		//B0 kiem tra checkbox
 		CButton *x = (CButton*)GetDlgItem(IDC_CHECK);
 		
@@ -311,10 +322,20 @@ CString sername,username,mesg;
 				return;
 			}
 			isKey=true;
-			char key[100];
+			char key[129];
 			HashSCKey (key,strKey);
-			scpTemp1.Init(key);
-			scpTemp2.Init(key);
+			if (radio3->GetCheck())
+			{
+				bcpTemp1.Init(key);
+				bcpTemp2.Init(key);
+				isStream=false;
+			}
+			else
+			{
+				scpTemp1.Init(key);
+				scpTemp2.Init(key);
+				isStream=true;
+			}
 		}
 
 		else
@@ -323,12 +344,6 @@ CString sername,username,mesg;
 
 		//B2 bung key
 		//B3 chuyen thanh khoa
-	}
-	
-	//Connect the client to server
-	username.MakeUpper();
-	sockclt.name=username;
-	
 	SetDlgItemText(IDC_BUTTON1,"Connecting");
 
 	if(sockclt.Connect(sername,port))
@@ -374,9 +389,9 @@ CString sername,username,mesg;
 /*                                                           */ 
 void Display::updateState(BOOL pstate,BOOL nstate)
 {
-CEdit *eser,*eport,*euser;
-CStatic *sser,*sport,*suser,*sgroup1,*sgroup2;
-CButton *con;
+CEdit *eser,*eport,*euser,*ekey;
+CStatic *sser,*sport,*suser,*sgroup1,*sgroup2,*skey;
+CButton *con,*check;
 
 		//Destroy server related items	
 		con=(CButton*)GetDlgItem(IDC_BUTTON1);
@@ -390,6 +405,9 @@ CButton *con;
 		
 		euser=(CEdit*)GetDlgItem(IDC_EDIT3);
 		euser->ShowWindow(pstate); 
+
+		ekey=(CEdit*)GetDlgItem(IDC_EDIT_KEY);
+		ekey->ShowWindow(pstate); 
 		
 		sser=(CStatic*)GetDlgItem(1098);
 		sser->ShowWindow(pstate); 
@@ -401,10 +419,20 @@ CButton *con;
 		sport=(CStatic*)GetDlgItem(1099);
 		sport->ShowWindow(pstate); 
 
+		skey=(CStatic*)GetDlgItem(1100);
+		skey->ShowWindow(pstate); 
+
+		radio3=(CButton*)GetDlgItem(IDC_RADIO_BLOCK);
+		radio4=(CButton*)GetDlgItem(IDC_RADIO_STREAM);
+		radio3->ShowWindow(pstate);
+		radio4->ShowWindow(pstate);
+
+		check=(CButton*)GetDlgItem(IDC_CHECK);
+		check->ShowWindow(pstate);
 		sgroup1=(CStatic*)GetDlgItem(1097);
-		sgroup1->ShowWindow(pstate); 
-
-
+		sgroup1->ShowWindow(pstate);
+		
+	
 
 		//Enable Send to items
 		sgroup2=(CStatic*)GetDlgItem(1075);
@@ -545,14 +573,17 @@ rcount=sockclt.Receive(buff,size);
 				//pTemp2.Decrypt(mes,length,newMesg);
 				if (isKey)
 				{
-					scpTemp2.Decrypt(&buff[20],length,newMesg);
+					if (isStream)
+						scpTemp2.Decrypt(&buff[20],length,newMesg);
+					else
+						bcpTemp2.CTRModeEncrypt(&buff[20],length,newMesg);
 					for (i=0;i<length;i++)
 						lpHdr->lpData[i]=newMesg[i];
 				}
 				else
 				{
-					for (i=0;i<length;i++)
-						lpHdr->lpData[i]=buff[i+20];
+					for(i=20,j=0;j<length;i++,j++)
+						lpHdr->lpData[j]=buff[i];
 				}
 
 ////////////////////////////////////////////////////////////////
@@ -950,11 +981,22 @@ void Display::sendMessage(char *mesg,int length)
 		log.WriteString("\n Send : Length is more than the 2000 or less than 1");
 		return;
 		}	
+		int size;
+		length %4==0?size=length/4:size=length/4+1;
 		if (isKey)
 		{
 			for (i=0;i<length;i++)
 				mymesg[i]=mesg[i];
-			scpTemp1.Encrypt(mymesg,length,mesg);
+			if (isStream)
+			{
+				scpTemp1.Encrypt(mymesg,length,mesg);
+				length %4==0?size=length:size=(length/4+1)*4;
+			}
+			else
+			{
+				bcpTemp1.CTRModeEncrypt(mymesg,length,mesg);
+				length %16==0?size=length:size=(length/16+1)*16;
+			}
 		}
 		mesg=mesg-20;	
 
@@ -980,8 +1022,7 @@ void Display::sendMessage(char *mesg,int length)
 		for(j=0,i=15;j<5;j++,i++)
 		mesg[i]=buflen[j];
 
-		int size;
-		length %4==0?size=length/4:size=length/4+1;
+		
 		
 	//Write to log file
 	sprintf(str,"\n Sending message datalen = %d , mesg = %s",length,&mesg[20]);
@@ -991,7 +1032,7 @@ void Display::sendMessage(char *mesg,int length)
 //	sprintf(str,"\n No of Messages Sent = %d ",sendcount);
 //	log.WriteString(str);
 	
-	if(sockclt.Send(mesg,length+20)!=SOCKET_ERROR )
+	if(sockclt.Send(mesg,size+20)!=SOCKET_ERROR )
 	log.WriteString("\n Data sent successfully to "+curuser);
 	else
 	log.WriteString("\n Data sent Error ");

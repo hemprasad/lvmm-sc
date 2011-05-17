@@ -6,13 +6,14 @@ class CBlockCipherProvider
 public:
 	unsigned char key[128];
 	bool Init(char* key);
+	bool isBegin;
 	char* Encrypt(char * data,int &size );
 	char* Decrypt(char *data,int size  );
-	char* CTRModeEncrypt(char * data,int &size );;
-	char* CTRModeDecrypt(char *data,int size  );
+	bool CTRModeEncrypt(char *data,int datalen,char *output );
+	bool CTRModeDecrypt(char *data,int cipherlen,char *output  );
 	CBlockCipherProvider(void);
 	~CBlockCipherProvider(void);
-	unsigned int Nonce,iTemp;
-	char* CBlockCipherProvider::CTRModeEncryptNext(char * data,int &size);
-	char* CBlockCipherProvider::CTRModeDecryptNext(char *cipher,int size );
+	double Nonce,iTemp;
+	bool CBlockCipherProvider::CTRModeEncryptNext(char *data,int datalen,char *output );
+	bool CBlockCipherProvider::CTRModeDecryptNext(char *data,int cipherlen,char *output  );
 };

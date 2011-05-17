@@ -95,6 +95,14 @@ SOURCE=.\about.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\BlockCipherProvider.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\BlockCipherProvider.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Broadcast.cpp
 # End Source File
 # Begin Source File
@@ -145,6 +153,14 @@ SOURCE=.\PlaySound1.cpp
 # Begin Source File
 
 SOURCE=.\RecordSound.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\rijndael.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\rijndael.h
 # End Source File
 # Begin Source File
 
