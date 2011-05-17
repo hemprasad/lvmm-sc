@@ -9,6 +9,7 @@
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #include <stdio.h>
 #include <tchar.h>
-
-
-// TODO: reference additional headers your program requires here
+typedef unsigned char u8;
+bool buildSbox(char *file,u8 *S);
+int test(u8 *S);
+// TODO: reference addit;ional headers your program requires here
