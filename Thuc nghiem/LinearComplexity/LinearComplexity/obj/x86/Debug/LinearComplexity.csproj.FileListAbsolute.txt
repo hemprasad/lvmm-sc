@@ -1,0 +1,5 @@
+c:\users\asus\documents\visual studio 2010\Projects\LinearComplexity\LinearComplexity\bin\Debug\LinearComplexity.exe
+c:\users\asus\documents\visual studio 2010\Projects\LinearComplexity\LinearComplexity\bin\Debug\LinearComplexity.pdb
+c:\users\asus\documents\visual studio 2010\Projects\LinearComplexity\LinearComplexity\obj\x86\Debug\ResolveAssemblyReference.cache
+c:\users\asus\documents\visual studio 2010\Projects\LinearComplexity\LinearComplexity\obj\x86\Debug\LinearComplexity.exe
+c:\users\asus\documents\visual studio 2010\Projects\LinearComplexity\LinearComplexity\obj\x86\Debug\LinearComplexity.pdb
