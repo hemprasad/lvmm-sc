@@ -1,0 +1,5 @@
+
+ Starting writing thread
+ In the OnEndThread fun
+ Closing the file
+ Successfully closed
