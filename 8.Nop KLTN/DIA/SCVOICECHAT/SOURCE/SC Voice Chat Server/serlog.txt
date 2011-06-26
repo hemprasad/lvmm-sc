@@ -1,0 +1,4 @@
+
+In the InitDialog of Dialog
+In the erase background box
+Closing the dialog box

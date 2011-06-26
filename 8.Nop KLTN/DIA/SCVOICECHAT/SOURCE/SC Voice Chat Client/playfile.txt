@@ -1,0 +1,7 @@
+
+Special properties... 
+WAVECAPS_LRVOLUME 
+WAVECAPS_VOLUME
+
+ In the constructor of Play sound
+Ending the play device

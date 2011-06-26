@@ -1,0 +1,7 @@
+
+ In the getMicControl
+Got the source line id
+ Got the line info
+no of items = 0 , id = 16 , channel = 1
+ Got the micmute control
+ Selecting mic...Mic selected properly
